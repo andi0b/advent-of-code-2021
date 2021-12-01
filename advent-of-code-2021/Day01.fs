@@ -8,14 +8,26 @@ let parse (strs: string seq) = strs |> Seq.map int |> Seq.toList
 let zipshift left right =
     List.zip (left |> List.take (left.Length - 1)) (right |> List.skip 1)
 
-let part1 (numbers: int list) =
+let part1_old (numbers: int list) =
     zipshift numbers numbers
-    |> Seq.filter (fun (a, b) ->  b > a)
+    |> Seq.filter (fun (a, b) -> b > a)
     |> Seq.length
 
-let part2 (numbers: int list) =
+let part2_old (numbers: int list) =
     zipshift (numbers |> List.take (numbers.Length - 1)) (zipshift numbers numbers)
     |> List.map (fun (a, (b, c)) -> a + b + c)
+    |> part1_old
+
+let part1 numbers =
+    numbers
+    |> Seq.pairwise
+    |> Seq.filter (fun (a, b) -> b > a)
+    |> Seq.length
+    
+let part2 numbers = 
+    numbers
+    |> Seq.windowed 3
+    |> Seq.map (fun i -> i |> Seq.sum)
     |> part1
 
 let test =
