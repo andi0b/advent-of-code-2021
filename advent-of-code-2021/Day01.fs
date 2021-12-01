@@ -2,36 +2,31 @@
 
 open System.IO
 
-let part1 numbers =
-    numbers
-    |> Seq.pairwise
-    |> Seq.filter (fun (a, b) -> b > a)
-    |> Seq.length
+let part1 =
+    Seq.pairwise
+    >> Seq.filter (fun (a, b) -> b > a)
+    >> Seq.length
 
-let part2 numbers = 
-    numbers
-    |> Seq.windowed 3
-    |> Seq.map Seq.sum
-    |> part1
+let part2 =
+    Seq.windowed 3 >> Seq.map Seq.sum >> part1
 
-let parse (strs: string seq) = strs |> Seq.map int |> Seq.toList
+let parse (strings: string seq) = strings |> Seq.map int |> Seq.toList
 
 let test =
-    let parsed =
-        [ "199"
-          "200"
-          "208"
-          "210"
-          "200"
-          "207"
-          "240"
-          "269"
-          "260"
-          "263" ]
-        |> parse
+    let testData =
+        parse [ "199"
+                "200"
+                "208"
+                "210"
+                "200"
+                "207"
+                "240"
+                "269"
+                "260"
+                "263" ]
 
-    assert (parsed |> part1 = 7)
-    assert (parsed |> part2 = 5)
+    assert (part1 testData = 7)
+    assert (part2 testData = 5)
 
 let result =
     test
