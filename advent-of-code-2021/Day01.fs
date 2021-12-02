@@ -31,4 +31,4 @@ let test =
 let result =
     test
     let parsed = File.ReadAllLines("Day01.txt") |> parse
-    $"{part1 parsed}/{part2 parsed}"
+    $"{part1 parsed} {part2 parsed}"
