@@ -22,14 +22,16 @@ let part1 instructions =
 type Submarine = { position: int * int; aim: int }
 
 let part2 instructions =
+    
+    let  initialPosition =  { position = (0, 0); aim = 0 }
 
     let calcNextPosition (sub: Submarine) (forward, aimChange) =
-        let (horizontal, depth) = sub.position
+        let horizontal, depth = sub.position
+        let nextPosition = (horizontal + forward, depth + sub.aim * forward)
+        let nextAim = sub.aim + aimChange
+        { position = nextPosition; aim=nextAim}
 
-        { position = (horizontal + forward, depth + sub.aim * forward)
-          aim = sub.aim + aimChange }
-
-    (Seq.fold calcNextPosition { position = (0, 0); aim = 0 } instructions)
+    (Seq.fold calcNextPosition initialPosition instructions)
         .position
     |> calcAnswer
 
