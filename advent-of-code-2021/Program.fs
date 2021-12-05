@@ -9,4 +9,4 @@ printfn "Hello from Advent of Code 2021"
 
 printfn $"Day1 {Day01.result}"
 printfn $"Day2 {Day02.result}"
-printfn $"Day2 {Day03.result}"
+printfn $"Day3 {Day03.result}"

@@ -16,24 +16,25 @@ let calcAnswer (a, b) = a * b
 
 let part1 instructions =
     instructions
-    |> Seq.reduce (fun (a1, b1) (a2, b2) -> (a1 + a2, b1 + b2))
+    |> Seq.reduce (fun (pos, depth) (forward, depthChange) -> (pos + forward, depth + depthChange))
     |> calcAnswer
 
 type Submarine = { position: int * int; aim: int }
 
 let part2 instructions =
-    
-    let  initialPosition =  { position = (0, 0); aim = 0 }
 
-    let calcNextPosition (sub: Submarine) (forward, aimChange) =
+    let initialState = { position = (0, 0); aim = 0 }
+
+    let nextState sub (forward, aimChange) =
         let horizontal, depth = sub.position
-        let nextPosition = (horizontal + forward, depth + sub.aim * forward)
-        let nextAim = sub.aim + aimChange
-        { position = nextPosition; aim=nextAim}
 
-    (Seq.fold calcNextPosition initialPosition instructions)
-        .position
-    |> calcAnswer
+        { position = (horizontal + forward, depth + sub.aim * forward)
+          aim = sub.aim + aimChange }
+
+    let finalState =
+        Seq.fold nextState initialState instructions
+
+    finalState.position |> calcAnswer
 
 let test =
     let parsedInstructions =
