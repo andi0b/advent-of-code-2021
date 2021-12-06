@@ -13,9 +13,7 @@ let part1 (fishAges: int seq) =
     |> Seq.fold (fun acc _ -> nextState acc) fishAges
     |> Seq.length
 
-
 type FishGroup = { age: int; count: int64 }
-
 module FishGroup =
     let totalFishCount (groups: FishGroup seq) = groups |> Seq.sumBy (fun g -> g.count)
 
@@ -23,26 +21,25 @@ module FishGroup =
         fishAges
         |> Seq.groupBy id
         |> Seq.map (fun (age, fish) -> { age = age; count = Seq.length fish })
-
-
-let nextGroupState =
-    Seq.collect
-        (function
-        | g when g.age = 0 ->
-            [ { g with age = 6 }
-              { g with age = 8 } ]
-        | g -> [ { g with age = g.age - 1 } ])
-    >> Seq.groupBy (fun g -> g.age)
-    >> Seq.map
-        (fun (age, g) ->
-            { age = age
-              count = (FishGroup.totalFishCount g) })
+        
+    let nextGroupState =
+        Seq.collect
+            (function
+            | g when g.age = 0 ->
+                [ { g with age = 6 }
+                  { g with age = 8 } ]
+            | g -> [ { g with age = g.age - 1 } ])
+        >> Seq.groupBy (fun g -> g.age)
+        >> Seq.map
+            (fun (age, g) ->
+                { age = age
+                  count = (totalFishCount g) })
 
 let part2 (fishAges: int seq) =
     let fishGroups = FishGroup.fromAgeList fishAges
 
     [ 1 .. 256 ]
-    |> Seq.fold (fun acc _ -> nextGroupState acc) fishGroups
+    |> Seq.fold (fun acc _ -> FishGroup.nextGroupState acc) fishGroups
     |> FishGroup.totalFishCount
 
 let test =
