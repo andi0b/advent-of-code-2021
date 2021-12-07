@@ -29,6 +29,10 @@
         <Compile Include="Day06.fs">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Compile>
+        <Content Include="Day07.txt">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Compile Include="Day07.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
