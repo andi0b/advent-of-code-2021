@@ -5,6 +5,12 @@
         <TargetFramework>net6.0</TargetFramework>
         <RootNamespace>advent_of_code_2021</RootNamespace>
     </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+        <PackageReference Include="Unquote" Version="6.1.0" />
+        <PackageReference Include="xunit" Version="2.4.1" />
+    </ItemGroup>
 
     <ItemGroup>
         <Content Include="Day01.txt">
@@ -19,6 +25,10 @@
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
         <Compile Include="Day03.fs" />
+        <Content Include="Day04.txt">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Compile Include="Day04.fs" />
         <Content Include="Day05.txt">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
