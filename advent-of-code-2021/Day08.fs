@@ -5,25 +5,6 @@ open System.IO
 open Swensen.Unquote
 open Xunit
 
-// 0 = abc_efg 6
-// 1 = __c__f_ 2
-// 2 = a_cde_g 5
-// 3 = a_cd_fg 5
-// 4 = _bcd_f_ 4
-// 5 = ab_d_fg 5
-// 6 = ab_defg 6
-// 7 = a_c__f_ 3
-// 8 = abcdefg 7
-// 9 = abcd_fg 6
-
-// 2 on => 1
-// 3 on => 7
-// 4 on => 4
-// 5 on => 2 3 5
-// 6 on => 0 6 9
-// 7 on => 8
-
-
 let parse (line: string) =
     let parts = line.Split(" | ")
     let patterns = parts.[0].Split(" ")
@@ -102,18 +83,15 @@ let solve2 (patternsRaw: string [], outputsRaw: string []) =
         |> Map.ofList
 
     outputs
-    |> List.map (fun x -> resolvedMappings.[x])
     |> List.rev
-    |> List.mapi (fun i x -> (pown 10 i) * x)
-    |> List.reduce (+)
-
+    |> List.mapi (fun i x -> resolvedMappings.[x] * (pown 10 i))
+    |> List.sum
 
 let part2 (lines: string list) =
     lines
     |> List.map parse
     |> List.map solve2
-    |> List.reduce (+)
-
+    |> List.sum
 
 let run () =
     let input =
@@ -136,7 +114,7 @@ module test =
 
     [<Fact>]
     let part1 () = test <@ part1 input = 26 @>
-    
+
     [<Fact>]
     let part2 () = test <@ part2 input = 61229 @>
 
