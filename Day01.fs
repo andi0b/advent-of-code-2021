@@ -30,5 +30,5 @@ let test =
 
 let result =
     test
-    let parsed = File.ReadAllLines("Day01.txt") |> parse
+    let parsed = File.ReadAllLines("inputs/Day01.txt") |> parse
     $"{part1 parsed} {part2 parsed}"

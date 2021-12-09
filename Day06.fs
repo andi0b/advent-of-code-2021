@@ -71,7 +71,7 @@ let result =
     test
 
     let fishAges =
-        File.ReadAllLines("Day06.txt").[0].Split(",")
+        File.ReadAllLines("inputs/Day06.txt").[0].Split(",")
         |> Array.map int
 
     $"{part1 fishAges} {part2 fishAges}"

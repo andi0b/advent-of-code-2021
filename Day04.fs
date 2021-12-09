@@ -117,7 +117,7 @@ let part2 = solve List.last
 
 let run () =
     let puzzle =
-        File.ReadAllText("Day04.txt") |> Puzzle.parse
+        File.ReadAllText("inputs/Day04.txt") |> Puzzle.parse
 
     $"{part1 puzzle} {part2 puzzle}"
 

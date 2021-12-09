@@ -54,6 +54,6 @@ let result =
     test
 
     let parsedInstructions =
-        File.ReadAllLines("Day02.txt") |> Seq.map parse
+        File.ReadAllLines("inputs/Day02.txt") |> Seq.map parse
 
     $"{part1 parsedInstructions} {part2 parsedInstructions}"

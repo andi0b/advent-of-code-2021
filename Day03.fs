@@ -56,6 +56,6 @@ let result =
     test
 
     let instructions =
-        File.ReadAllLines("Day03.txt") |> Seq.toList
+        File.ReadAllLines("inputs/Day03.txt") |> Seq.toList
 
     $"{part1 instructions} {part1 instructions}"

@@ -44,6 +44,6 @@ let result =
     test
 
     let input =
-        File.ReadAllLines("Day07.txt").[0] |> parse
+        File.ReadAllLines("inputs/Day07.txt").[0] |> parse
 
     $"{part1 input} {part2 input}"

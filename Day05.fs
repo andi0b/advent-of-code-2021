@@ -92,7 +92,7 @@ let result =
     test
 
     let lines =
-        File.ReadAllLines("Day05.txt")
+        File.ReadAllLines("inputs/Day05.txt")
         |> Array.map Line.parse
 
     $"{part1 lines} {part2 lines}"

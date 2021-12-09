@@ -75,7 +75,7 @@ let part2 (lines: string list) =
 
 let run () =
     let input =
-        File.ReadAllLines("Day08.txt") |> List.ofArray
+        File.ReadAllLines("inputs/Day08.txt") |> List.ofArray
 
     $"{part1 input} {part2 input}"
 
