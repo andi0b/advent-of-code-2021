@@ -35,7 +35,7 @@ let part1 (lines: string list) =
     |> Seq.filter (fun len -> len = 2 || len = 3 || len = 4 || len = 7)
     |> Seq.length
 
-let solve2 (patterns: int list, outputs: int list) =
+let getDisplayValue (patterns: int list, outputs: int list) =
 
     let one, four =
         let findPattern c =
@@ -70,7 +70,7 @@ let solve2 (patterns: int list, outputs: int list) =
 let part2 (lines: string list) =
     lines
     |> List.map Parser.parse
-    |> List.map solve2
+    |> List.map getDisplayValue
     |> List.sum
 
 let run () =
@@ -113,4 +113,4 @@ module test =
             + " | cdfeb fcadb cdfeb cdbaf"
             |> Parser.parse
 
-        test <@ solve2 parsed = 5353 @>
+        test <@ getDisplayValue parsed = 5353 @>
