@@ -5,81 +5,61 @@ open System.IO
 open Swensen.Unquote
 open Xunit
 
-let parse (line: string) =
-    let parts = line.Split(" | ")
-    let patterns = parts.[0].Split(" ")
-    let outputs = parts.[1].Split(" ")
+module Parser =
+    let parseBinary (input: string) =
+        input.ToCharArray()
+        |> Array.map (fun c -> (c |> int) - ('a' |> int))
+        |> Array.fold (fun state shift -> (1 <<< shift) ||| state) 0
 
-    (patterns, outputs)
+    let parsePart (str: string) =
+        str.Split(" ")
+        |> Array.map parseBinary
+        |> Array.toList
 
-let parseBinary (input: string) =
-    input.ToCharArray()
-    |> Array.map (fun c -> (c |> int) - ('a' |> int))
-    |> Array.fold (fun state shift -> (1 <<< shift) ||| state) 0
+    let parse (line: string) =
+        let parts = line.Split(" | ")
 
-let part1 (lines: string list) =
-    lines
-    |> Seq.collect (parse >> snd >> (Array.map String.length))
-    |> Seq.filter (fun len -> len = 2 || len = 3 || len = 4 || len = 7)
-    |> Seq.length
+        let patterns = parsePart parts.[0]
+        let outputs = parsePart parts.[1]
+
+        (patterns, outputs)
 
 let segmentCount value =
     value
     |> uint32
     |> System.Numerics.BitOperations.PopCount
 
-let firstPass value =
-    match (segmentCount value) with
-    | 2 -> Some 1
-    | 3 -> Some 7
-    | 4 -> Some 4
-    | 7 -> Some 8
-    | _ -> None
+let part1 (lines: string list) =
+    lines
+    |> Seq.collect (Parser.parse >> snd >> (List.map segmentCount))
+    |> Seq.filter (fun len -> len = 2 || len = 3 || len = 4 || len = 7)
+    |> Seq.length
 
-let secondPass value (resolvedMappings: Map<int, int>) =
-    let one = resolvedMappings.[1]
-    let four = resolvedMappings.[4]
+let solve2 (patterns: int list, outputs: int list) =
 
-    let solve5 =
-        if ((value &&& one) = one) then
-            3
-        else
-            match ((value &&& four) |> segmentCount) with
-            | 2 -> 2
-            | 3 -> 5
-            | i -> failwith ($"invalid 7 segment number, remaining segments after &&& four = {i}")
+    let one, four =
+        let findPattern c =
+            List.find (fun x -> segmentCount x = c) patterns
 
-    let solve6 =
-        if ((value &&& four) = four) then 9
-        elif ((value &&& one) = one) then 0
-        else 6
+        (findPattern 2, findPattern 4)
 
-    match (segmentCount value) with
-    | 5 -> solve5
-    | 6 -> solve6
-    | _ -> failwith ("invalid 7 segment number")
-
-let solve2 (patternsRaw: string [], outputsRaw: string []) =
-
-    let toBinary = Seq.map parseBinary >> Seq.toList
-
-    let patterns = patternsRaw |> toBinary
-    let outputs = outputsRaw |> toBinary
-
-    let firstResolvedMappings =
-        patterns
-        |> List.choose (fun p -> firstPass p |> Option.map (fun r -> (r, p)))
-        |> Map.ofSeq
-
-    let secondResolvedMappings =
-        patterns
-        |> List.except firstResolvedMappings.Values
-        |> List.map (fun p -> (secondPass p firstResolvedMappings, p))
+    let decode p =
+        match (segmentCount p, segmentCount (p &&& one), segmentCount (p &&& four)) with
+        | (2, _, _) -> 1
+        | (3, _, _) -> 7
+        | (4, _, _) -> 4
+        | (5, 2, _) -> 3
+        | (5, _, 2) -> 2
+        | (5, _, 3) -> 5
+        | (6, _, 4) -> 9
+        | (6, 2, _) -> 0
+        | (6, 1, _) -> 6
+        | (7, _, _) -> 8
+        | _ -> failwith ("unknown segment value")
 
     let resolvedMappings =
-        secondResolvedMappings
-        @ (firstResolvedMappings |> Map.toList)
-        |> List.map (fun (key, value) -> (value, key))
+        patterns
+        |> List.map (fun x -> (x, decode x))
         |> Map.ofList
 
     outputs
@@ -89,7 +69,7 @@ let solve2 (patternsRaw: string [], outputsRaw: string []) =
 
 let part2 (lines: string list) =
     lines
-    |> List.map parse
+    |> List.map Parser.parse
     |> List.map solve2
     |> List.sum
 
@@ -120,18 +100,17 @@ module test =
 
     [<Fact>]
     let parseBitwise () =
-        test <@ parseBinary "a" = 1 @>
-        test <@ parseBinary "b" = 2 @>
-        test <@ parseBinary "ab" = 3 @>
-        test <@ parseBinary "bc" = 6 @>
+        test <@ Parser.parseBinary "a" = 1 @>
+        test <@ Parser.parseBinary "b" = 2 @>
+        test <@ Parser.parseBinary "ab" = 3 @>
+        test <@ Parser.parseBinary "bc" = 6 @>
 
     [<Fact>]
     let solve2 () =
 
-        let patterns =
+        let parsed =
             "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab"
-                .Split(' ')
+            + " | cdfeb fcadb cdfeb cdbaf"
+            |> Parser.parse
 
-        let outputs = "cdfeb fcadb cdfeb cdbaf".Split(' ')
-
-        test <@ solve2 (patterns, outputs) = 5353 @>
+        test <@ solve2 parsed = 5353 @>
