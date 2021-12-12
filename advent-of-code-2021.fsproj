@@ -8,9 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0"/>
-        <PackageReference Include="Unquote" Version="6.1.0"/>
-        <PackageReference Include="xunit" Version="2.4.1"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+        <PackageReference Include="Unquote" Version="6.1.0" />
+        <PackageReference Include="xunit" Version="2.4.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -19,15 +19,16 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
         
-        <Compile Include="Day01.fs"/>
-        <Compile Include="Day02.fs"/>
-        <Compile Include="Day03.fs"/>
-        <Compile Include="Day04.fs"/>
-        <Compile Include="Day05.fs"/>
-        <Compile Include="Day06.fs"/>
-        <Compile Include="Day07.fs"/>
-        <Compile Include="Day08.fs"/>
-        <Compile Include="Program.fs"/>
+        <Compile Include="Day01.fs" />
+        <Compile Include="Day02.fs" />
+        <Compile Include="Day03.fs" />
+        <Compile Include="Day04.fs" />
+        <Compile Include="Day05.fs" />
+        <Compile Include="Day06.fs" />
+        <Compile Include="Day07.fs" />
+        <Compile Include="Day08.fs" />
+        <Compile Include="Day09.fs" />
+        <Compile Include="Program.fs" />
 
     </ItemGroup>
 
