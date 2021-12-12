@@ -28,20 +28,16 @@ module HeightMap =
         [ (-1, 0); (0, -1); (1, 0); (0, 1) ]
         |> List.choose getWithOffset
 
-    let isLowPoint (x, y) (heightMap: HeightMap) =
-        heightMap
-        |> getAdjacent (x, y)
-        |> List.forall (fun (_, adjVal) -> adjVal > heightMap.[x, y])
-
     let lowPoints (heightMap: HeightMap) =
+        let isLowPoint (x, y) (heightMap: HeightMap) =
+            heightMap
+            |> getAdjacent (x, y)
+            |> List.forall (fun (_, adjVal) -> adjVal > heightMap.[x, y])
+
         heightMap
-        |> Array2D.mapi
-            (fun x y value ->
-                match (heightMap |> isLowPoint (x, y)) with
-                | true -> Some((x, y), value)
-                | false -> None)
-        |> Seq.cast<((int * int) * int) option>
-        |> Seq.choose id
+        |> Array2D.mapi (fun x y value -> ((x, y), value))
+        |> Seq.cast<(int * int) * int>
+        |> Seq.filter (fun (pos, _) -> heightMap |> isLowPoint pos)
         |> Seq.toList
 
     let calculateBasinSize startPoint (heightMap: HeightMap) =
