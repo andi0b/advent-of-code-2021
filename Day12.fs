@@ -68,11 +68,15 @@ let part2 input =
     let paths doubleCave =
 
         let canTravel visitedCaves cave =
-            isBigCave cave
-            || (cave = doubleCave
+
+            let doubleCaveNotVisitedTwice =
+                cave = doubleCave
                 && visitedCaves
                    |> Seq.filter (fun x -> x = doubleCave)
-                   |> Seq.length = 1)
+                   |> Seq.length < 2
+
+            isBigCave cave
+            || doubleCaveNotVisitedTwice
             || not (visitedCaves |> List.contains cave)
 
         walkCaves "start" [] canTravel caveMap
