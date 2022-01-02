@@ -2,6 +2,9 @@
 
 open System
 open System.IO
+open Xunit
+open Swensen.Unquote
+open Xunit.Sdk
 
 
 
@@ -33,7 +36,48 @@ let part1 report =
     let gamma = calcGamma epsilon report.[0].Length
     epsilon * gamma
 
-let test =
+
+let reduce chooser def reports =
+
+    let rec reduceInner (chooser: int list -> int) (def: char) currentPosition (reports: string list) =
+
+        let getCurrentPosition (x: string) = x.[currentPosition]
+
+        let groups =
+            reports
+            |> List.groupBy getCurrentPosition
+            |> List.map (fun (_, list) -> (list.Length, list))
+
+        let chosenCount = groups |> List.map fst |> chooser
+
+        let remaining =
+            groups
+            |> List.filter (fun (count, _) -> count = chosenCount)
+            |> List.map snd
+            |> List.tryExactlyOne
+            |> Option.defaultWith
+                (fun () ->
+                    reports
+                    |> List.filter (fun x -> (getCurrentPosition x) = def))
+
+        match remaining with
+        | [ _ ] -> remaining
+        | _ -> reduceInner chooser def (currentPosition + 1) remaining
+
+    reduceInner chooser def 0 reports
+    |> List.exactlyOne
+
+let part2 (report: string list) =
+
+    let fromBinary x = Convert.ToInt32(x, 2)
+
+    let oxygenRating = reduce List.max '1' report |> fromBinary
+    let co2Rating = reduce List.min '0' report |> fromBinary
+
+    oxygenRating * co2Rating
+
+
+module test =
     let report =
         [ "00100"
           "11110"
@@ -48,14 +92,17 @@ let test =
           "00010"
           "01010" ]
 
-    assert (part1 report = 198)
-//assert (part2 parsedInstructions = 900)
 
+    [<Fact>]
+    let part1 () = test <@ part1 report = 198 @>
+
+
+    [<Fact>]
+    let part2 () = test <@ part2 report = 230 @>
 
 let result =
-    test
-
     let instructions =
-        File.ReadAllLines("inputs/Day03.txt") |> Seq.toList
+        File.ReadAllLines("inputs/Day03.txt")
+        |> Seq.toList
 
-    $"{part1 instructions} {part1 instructions}"
+    $"{part1 instructions} {part2 instructions}"
