@@ -4,9 +4,6 @@ open System
 open System.IO
 open Xunit
 open Swensen.Unquote
-open Xunit.Sdk
-
-
 
 let calcEpsilon (report: string list) =
     let len = report.[0].Length
